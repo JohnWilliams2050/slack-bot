@@ -1,4 +1,4 @@
-from calendar import FRIDAY
+from calendar import SUNDAY
 import slack
 import os
 import schedule
@@ -54,7 +54,7 @@ def check_tuple2():
 
 
 def final_check(mem_list_num):
-    if mem_list_num == members_pairs1:
+    '''if mem_list_num == members_pairs1:
         for p in mem_list_num:
             l2 = list(p)
             sorted(l2)
@@ -64,8 +64,8 @@ def final_check(mem_list_num):
                 if (l1 != l2):
                     print("they are not equal")
                 else:
-                    task()
-    elif mem_list_num == members_pairs2:
+                    task()'''
+    '''elif mem_list_num == members_pairs2:
         for p in mem_list_num:
             l2 =list(p)
             sorted(l2)
@@ -75,7 +75,24 @@ def final_check(mem_list_num):
                 if (l1 != l2):
                     print("they are not equal")
                 else:
-                    task2()
+                    task2()'''
+    with open ('previousPairs.txt','r') as p :
+        members_pairs2 = [pairs.rstrip() for pairs in p]
+        p.close()
+    for g in mem_list_num:
+        g2 = list(g)
+        sorted(g2)
+        print("they are getting checked")
+        for m in members_pairs2:
+            m1 = list(m)
+            sorted(m)
+            if (g2 != m):
+                print("this is g2" + str(g2))
+                print("this is m1 " + str(m))
+                print("they are not the same")
+            else:
+                print("they are the same")
+                task()
     #else:
         '''l3 = str(three_mem_grp)
         l4 = str(three_mem_grp2)
@@ -112,9 +129,12 @@ def final_check(mem_list_num):
             #task()
         #elif mem_list_num == three_mem_grp2:
             #task2()'''
-'''
+
 def final_check2(three_mem):
     l3 = str(three_mem_grp)
+    with open('previous3.txt','r') as y:
+        three_mem_grp2 = [pairs3.rstrip() for pairs3 in y]
+        y.close()
     l4 = str(three_mem_grp2)
     sorted(l4)
     sorted(l3)
@@ -123,6 +143,19 @@ def final_check2(three_mem):
     sorted(l5)
     temp_list = []
     if l5 == l4:
+        for w in three_mem:
+            print("this is the element" + w)
+            temp_list.append(w)
+            three_mem.remove(w)
+            print("this is the group 3 " + str(three_mem))
+        ats.extend(temp_list)
+        three_mem_grp.clear()
+        print("this is the 3 member group" + str(three_mem_grp) )
+        three_grp1()
+    else:
+        print("they are not the same")
+
+    '''if l5 == l4:
         print("this is the sorted list 2" + l5 + "checking" + l4)
         #new_three2 = three_mem_grp2[1:-1]
         for w in three_mem:
@@ -151,18 +184,40 @@ def final_check2(three_mem):
     #elif mem_list_num == three_mem_grp:
         #task()
     #elif mem_list_num == three_mem_grp2:
-        #task2()
-'''
+        #task2()'''
+
 
 
 def task():
-    if datetime.today().weekday() == 4:
+    if datetime.today().weekday() == 6:
+        with open('previous3.txt','w') as t:
+            t.truncate(0)
+            for h in three_mem_grp:
+                t.write("%s\n" % str(h))
+            t.close()
         members_pairs1.clear()
         shuffle(ats)
         for p1, p2 in zip(ats[::2], ats[1::2]):
             group_1 = (p1, p2)
             members_pairs1.append(group_1)
+            print("these are the pairs " + str(members_pairs1))
         final_check(members_pairs1)
+        with open ('previousPairs.txt','w') as f:
+            #f.truncate(0)
+            for item in members_pairs1:
+                print(item)
+                f.write("%s\n" % str(item))
+                print(f)
+
+            f.close()
+            print('Done')
+        final_check(members_pairs1)
+        with open ('previousPairs.txt','w') as f:
+            #f.truncate(0)
+            for item in members_pairs1:
+                print(item)
+                f.write("%s\n" % str(item))
+                print(f)
         #if check_if_equal_2(members_pairs1, members_pairs2):
         #if final_check():
             #members_pairs1.clear()
@@ -176,13 +231,13 @@ def task():
         new_numbers1 = ' '.join(str(e) for e in members_pairs1)
         client.chat_postMessage(channel = '#test',
         text= new_numbers1)
-        #client.chat_postMessage(channel = '#test', text = three_mem_grp)
+        client.chat_postMessage(channel = '#test', text = three_mem_grp)
         client.chat_postMessage(channel = '#test',
-        text="Week 2 pairs")
+        text="This month's groups")
 
 
 
-def task2():
+'''def task2():
     if datetime.today().weekday() == 4:
         members_pairs2.clear()
         shuffle(ats)
@@ -202,11 +257,11 @@ def task2():
         new_numbers2 = ' '.join(str(e) for e in members_pairs2)
         client.chat_postMessage(channel = '#test',
         text= new_numbers2)
-        #client.chat_postMessage(channel = '#test', text = three_mem_grp2)
+        client.chat_postMessage(channel = '#test', text = three_mem_grp2)
         client.chat_postMessage(channel = '#test',
-        text="Week 1 pairs")
+        text="Week 1 pairs")'''
 
-'''
+
 def three_grp1():
     shuffle(ats)
     for i in range(0,3):
@@ -218,7 +273,7 @@ def three_grp1():
     print("the three groups" + str(three_mem_grp))
     final_check2(three_mem_grp)
     task()
-
+'''
 def three_grp2():
     shuffle(ats)
     for i in range(0,3):
@@ -257,26 +312,30 @@ def start():
         members_list.clear()
         print(members_list)
         print("this is the ats" + str(ats))
-        switch()
+        if (len(ats) % 2) != 0:
+            three_grp1()
+        else:
+            task()
+        #switch()
 
 
-def switch():
-    if (counter() % 2) == 0:
-        members_pairs1.clear()
+#def switch():
+    #if (counter() % 2) == 0:
+        #members_pairs1.clear()
         '''if (len(ats) % 2) != 0:
             three_grp1()
         else:
             task()'''
-        task()
-    else:
-        members_pairs2.clear()
+        #task()
+    #else:
+        #members_pairs2.clear()
         '''if (len(ats) % 2) != 0:
             three_grp2()
         else:
             task2()'''
-        task2()
-
-schedule.every(30).seconds.do(start)
+        #task2()
+start()
+#schedule.every(30).seconds.do(start)
 
 
 while True:
