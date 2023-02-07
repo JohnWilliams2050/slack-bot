@@ -1,4 +1,4 @@
-from calendar import SUNDAY
+from calendar import MONDAY
 import slack
 import os
 import schedule
@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from random import shuffle, choice
 from slackeventsapi import SlackEventAdapter
 from datetime import datetime, timedelta
-#import collections
 from flask import Flask, request, Response
 
 
@@ -25,280 +24,152 @@ members_pairs1 = []
 members_pairs2 = []
 three_mem_grp = []
 three_mem_grp2 = []
-
-"""def check_if_equal_2(list_1, list_2):
-    if len (list_1) != len(list_2):
-        return False
-    check_if_ele_equal(list_1, list_2)
-    return collections.Counter(list_1) == collections.Counter(list_2)
-
-def check_if_ele_equal(list_1, list_2):
-    results = list_1 == list_2
-    if results == True:
-        shuffle(members_list)"""
-
-"""def check_tuple1():
-    for n in members_pairs1:
-        l1 = list(n)
-        shuffle(l1)
-        t1 = tuple(l1)
-        members_pairs1.remove(n)
-        members_pairs1.append(t1)
-def check_tuple2():
-    for p in members_pairs2:
-        l2= list(p)
-        shuffle(l2)
-        t2= tuple(l2)
-        members_pairs2.remove(p)
-        members_pairs2.append(t2)"""
+the_check = False
 
 
 def final_check(mem_list_num):
-    '''if mem_list_num == members_pairs1:
-        for p in mem_list_num:
-            l2 = list(p)
-            sorted(l2)
-            for i in members_pairs2:
-                l1 = list(i)
-                sorted(l1)
-                if (l1 != l2):
-                    print("they are not equal")
-                else:
-                    task()'''
-    '''elif mem_list_num == members_pairs2:
-        for p in mem_list_num:
-            l2 =list(p)
-            sorted(l2)
-            for i in members_pairs1:
-                l1 = list(i)
-                sorted(l1)
-                if (l1 != l2):
-                    print("they are not equal")
-                else:
-                    task2()'''
+    counts = 0
+    check = False
+    break_out_flag = False
     with open ('previousPairs.txt','r') as p :
-        members_pairs2 = [pairs.rstrip() for pairs in p]
+        members_pairs3 = [pairs.rstrip() for pairs in p]
+        members_pairs2 = list(map(eval, members_pairs3))
+        ##print("this is the type of members_pairs3: ",type(members_pairs3))
         p.close()
+    ##print("this is members_pairs2",members_pairs2)
     for g in mem_list_num:
-        g2 = list(g)
-        sorted(g2)
-        print("they are getting checked")
+        ##print(g, "this is the type of g: ", type(g))
+        ##print("they are getting checked")
         for m in members_pairs2:
-            m1 = list(m)
-            sorted(m)
-            if (g2 != m):
-                print("this is g2" + str(g2))
-                print("this is m1 " + str(m))
-                print("they are not the same")
-            else:
-                print("they are the same")
-                task()
-    #else:
-        '''l3 = str(three_mem_grp)
-        l4 = str(three_mem_grp2)
-        sorted(l4)
-        sorted(l3)
-        #sorted(three_mem_grp2)
-        l5 = str(mem_list_num)
-        sorted(l5)
-        if l5 == l4:
-            print("this is the sorted list 2" + l4)
-            #new_three2 = three_mem_grp2[1:-1]
-            for w in mem_list_num:
-                print("this is the element" + w)
-                ats.append(w)
-                #mem_list_num.remove(t)
-            print("this is the updated ats" + str(ats))
-            #three_mem_grp.clear()
-            three_grp2()
-            #task()
-        elif l5 == l3:
-            print("this is the sorted list 2" + l3)
-            #new_three1 = three_mem_grp[1:-1]
-            for t in mem_list_num:
-                print("this is the element" + t)
-                ats.append(t)
-                #mem_list_num.remove(t)
-            print("this is the updated ats" + str(ats))
-            #three_mem_grp2.clear()
-            three_grp1()
-            #task2()
-        else:
-            print("they are not the same list")
-        #elif mem_list_num == three_mem_grp:
-            #task()
-        #elif mem_list_num == three_mem_grp2:
-            #task2()'''
+
+            ##print(m, "this is the type of m: ", type(m))
+            gSorted = sorted(g)
+            mSorted = sorted(m)
+            if (gSorted != mSorted):
+                ##print("this is g2" + str(gSorted))
+                ##print("this is m1 " + str(mSorted))
+                ##print("they are not the same")
+                counts += 1
+                ##print (counts)
+                ##print(len(members_pairs2)*len(members_pairs1))
+                if counts == (len(members_pairs2)*len(members_pairs1)):
+                    print("the counter finished")
+                else:
+                    print("not not")
+            elif (gSorted == mSorted):
+                ##print("they are the same")
+                ##print("this is sorted m: ", str(mSorted))
+                ##print("this is sorted m: ", str(gSorted))
+                check = True
+                ##print(check)
+                counts = 0
+                break_out_flag = True
+                break
+        if break_out_flag:
+            break_out_flag = False
+            break
+    ##print (counts)
+    ##print(len(members_pairs2)*len(members_pairs1))
+    ##print("this is check 2 ", check)    
+    if check == True:
+        ##print("check true")
+        check = False
+        pairs()
+        return
+    if counts == (len(members_pairs2)*len(members_pairs1)):
+        ##print("the counter finished")
+        prev_zero()
+        return
+
 
 def final_check2(three_mem):
-    l3 = str(three_mem_grp)
     with open('previous3.txt','r') as y:
         three_mem_grp2 = [pairs3.rstrip() for pairs3 in y]
+        ##three_mem_grp3 = list(map(eval, three_mem_grp2))
+        ##print("this is the type of members_pairs3: ",type(three_mem_grp2))
         y.close()
-    l4 = str(three_mem_grp2)
-    sorted(l4)
-    sorted(l3)
-    #sorted(three_mem_grp2)
-    l5 = str(three_mem)
-    sorted(l5)
+    l4 = sorted(three_mem_grp2)
+    l5 = sorted(three_mem)
     temp_list = []
     if l5 == l4:
         for w in three_mem:
-            print("this is the element" + w)
+            ##print("this is the element" + w)
             temp_list.append(w)
             three_mem.remove(w)
-            print("this is the group 3 " + str(three_mem))
+            ##print("this is the group 3 " + str(three_mem))
         ats.extend(temp_list)
         three_mem_grp.clear()
-        print("this is the 3 member group" + str(three_mem_grp) )
+        ##print("this is the 3 member group" + str(three_mem_grp) )
         three_grp1()
     else:
         print("they are not the same")
 
-    '''if l5 == l4:
-        print("this is the sorted list 2" + l5 + "checking" + l4)
-        #new_three2 = three_mem_grp2[1:-1]
-        for w in three_mem:
-            print("this is the element" + w)
-            temp_list.append(w)
-            #mem_list_num.remove(t)
-        #ats.extend(temp_list)
-        print("this is the updated ats" + str(ats))
-        #three_mem_grp.clear()
-        three_grp2()
-        #task()
-    elif l5 == l3:
-        print("this is the sorted list 2" + l5 + "checking" + l3)
-        #new_three1 = three_mem_grp[1:-1]
-        for t in three_mem:
-            print("this is the element" + t)
-            temp_list.append(t)
-            #mem_list_num.remove(t)
-        #ats.extend(temp_list)
-        print("this is the updated ats" + str(ats))
-        #three_mem_grp2.clear()
-        three_grp1()
-        #task2()
-    else:
-        print("they are not the same list")
-    #elif mem_list_num == three_mem_grp:
-        #task()
-    #elif mem_list_num == three_mem_grp2:
-        #task2()'''
 
 
 
 def task():
-    if datetime.today().weekday() == 6:
-        with open('previous3.txt','w') as t:
-            t.truncate(0)
-            for h in three_mem_grp:
-                t.write("%s\n" % str(h))
-            t.close()
-        members_pairs1.clear()
-        shuffle(ats)
-        for p1, p2 in zip(ats[::2], ats[1::2]):
-            group_1 = (p1, p2)
-            members_pairs1.append(group_1)
-            print("these are the pairs " + str(members_pairs1))
-        final_check(members_pairs1)
-        with open ('previousPairs.txt','w') as f:
-            #f.truncate(0)
-            for item in members_pairs1:
-                print(item)
-                f.write("%s\n" % str(item))
-                print(f)
+    with open('previous3.txt','w') as t:
+        t.truncate(0)
+        for h in three_mem_grp:
+            t.write("%s\n" % str(h))
+        t.close()
+    pairs()
+    if os.path.getsize('previousPairs.txt') == 0:
+        ##print("starting 0")
+        prev_zero()
+        message()
+    ##print("this is the The check: ", the_check)
+    print('Done')
+    message()
+    return
 
-            f.close()
-            print('Done')
-        final_check(members_pairs1)
-        with open ('previousPairs.txt','w') as f:
-            #f.truncate(0)
-            for item in members_pairs1:
-                print(item)
-                f.write("%s\n" % str(item))
-                print(f)
-        #if check_if_equal_2(members_pairs1, members_pairs2):
-        #if final_check():
-            #members_pairs1.clear()
-            #shuffle (ats)
-            #for k1, k2 in zip(ats[::2], ats[1::2]):
-                #group_1_2 = (k1, k2)
-                #members_pairs1.append(group_1_2)
-        #else:
-            #print("they do not match")
-            #final_check(members_pairs1)
-        new_numbers1 = ' '.join(str(e) for e in members_pairs1)
-        client.chat_postMessage(channel = '#test',
-        text= new_numbers1)
-        client.chat_postMessage(channel = '#test', text = three_mem_grp)
-        client.chat_postMessage(channel = '#test',
-        text="This month's groups")
-
-
-
-'''def task2():
-    if datetime.today().weekday() == 4:
-        members_pairs2.clear()
-        shuffle(ats)
-        for z1, z2 in zip(ats[::2], ats[1::2]):
-            group_2 = (z1, z2)
-            members_pairs2.append(group_2)
-        #if check_if_equal_2(members_pairs1, members_pairs2):
-        #if final_check():
-            #members_pairs2.clear()
-            #shuffle(ats)
-            #for m1, m2 in zip(ats[::2], ats[1::2]):
-                #group_2 = (m1,m2)
-                #members_pairs2.append(group_2)    
-        #else:
-            #print("they do not match")
-        final_check(members_pairs2)
-        new_numbers2 = ' '.join(str(e) for e in members_pairs2)
-        client.chat_postMessage(channel = '#test',
-        text= new_numbers2)
-        client.chat_postMessage(channel = '#test', text = three_mem_grp2)
-        client.chat_postMessage(channel = '#test',
-        text="Week 1 pairs")'''
+def prev_zero():
+    with open ('previousPairs.txt','w') as f:
+        for item in members_pairs1:
+            ##print(item)
+            f.write("%s\n" % str(item))
+            ##print(f)
+        f.close()
+    return
+def message():
+    new_numbers1 = ' '.join(str(e) for e in members_pairs1)
+    client.chat_postMessage(channel = '#test',
+    text= new_numbers1)
+    client.chat_postMessage(channel = '#test', text = three_mem_grp)
+    client.chat_postMessage(channel = '#test',
+    text="This month's groups")
+    return
+def pairs():
+    members_pairs1.clear()
+    shuffle(ats)
+    for p1, p2 in zip(ats[::2], ats[1::2]):
+        group_1 = (p1, p2)
+        members_pairs1.append(group_1)
+        ##print("these are the pairs " + str(members_pairs1))
+    final_check(members_pairs1)
+    return
 
 
 def three_grp1():
     shuffle(ats)
     for i in range(0,3):
         grp_member = choice(ats)
-        print("choice" + str(grp_member))
+        ##print("choice" + str(grp_member))
         three_mem_grp.append(grp_member)
         ats.remove(grp_member)
-        print("this is what was removed from ats" + str(ats))
-    print("the three groups" + str(three_mem_grp))
+        ##print("this is what was removed from ats" + str(ats))
+    ##print("the three groups" + str(three_mem_grp))
     final_check2(three_mem_grp)
     task()
-'''
-def three_grp2():
-    shuffle(ats)
-    for i in range(0,3):
-        grp_member2 = choice(ats)
-        print("choice2" + str(grp_member2))
-        three_mem_grp2.append(grp_member2)
-        ats.remove(grp_member2)
-        print("this is what was removed from ats" + str(ats))
-    print("the three groups" + str(three_mem_grp2))
-        #three_mem_grp2.sort()
-    
-    final_check2(three_mem_grp2)
-    task2()
-'''
+    return
     
 
 starting_count = [0]
 def counter():
     new_count = starting_count[-1] + 1
-    #print(new_count)
-    #starting_count.remove(0)
     starting_count.append(new_count)
-    #print(starting_count)
     latest_count = starting_count[-1]
-    print(latest_count)
+    ##print(latest_count)
     return latest_count
 ats =[]
 def start():
@@ -310,32 +181,15 @@ def start():
         global ats
         ats = [' <@' + mem + '> ' for mem in members_list]
         members_list.clear()
-        print(members_list)
-        print("this is the ats" + str(ats))
+        ##print(members_list)
+        ##print("this is the ats" + str(ats))
         if (len(ats) % 2) != 0:
             three_grp1()
+            return
         else:
             task()
-        #switch()
-
-
-#def switch():
-    #if (counter() % 2) == 0:
-        #members_pairs1.clear()
-        '''if (len(ats) % 2) != 0:
-            three_grp1()
-        else:
-            task()'''
-        #task()
-    #else:
-        #members_pairs2.clear()
-        '''if (len(ats) % 2) != 0:
-            three_grp2()
-        else:
-            task2()'''
-        #task2()
+            return
 start()
-#schedule.every(30).seconds.do(start)
 
 
 while True:
